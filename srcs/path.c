@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:07:31 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/01 12:09:53 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/07 13:13:46 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ char	*build_and_check(char **paths, char **cmd)
 {
 	char	*correct;
 	int		i;
+	char	*temp;
 
 	if (!paths || !cmd || !cmd[0])
 		return (NULL);
@@ -83,7 +84,10 @@ char	*build_and_check(char **paths, char **cmd)
 		free(correct);
 		i++;
 	}
-	return (ft_putstr_fd("Command not found", 2), NULL);
+	temp = ft_substr(cmd[0], 1, ft_strlen(cmd[0]) - 1);
+	if (!temp)
+		return (NULL);
+	return (perror(temp), free(temp), NULL);
 }
 
 char	*correct_path(char **argv, char **envp, int j)

@@ -6,7 +6,7 @@
 #    By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/12 13:17:19 by miltavar          #+#    #+#              #
-#    Updated: 2025/07/07 10:49:28 by miltavar         ###   ########.fr        #
+#    Updated: 2025/07/07 12:53:59 by miltavar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,8 @@ NAME		= pipex
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -g -Ilibft/includes -Iincludes
 
-SRCS		= srcs/pipex.c srcs/utils.c srcs/path.c
-BONUS_SRC	= srcs/pipex_bonus.c srcs/path.c srcs/utils.c srcs/utils_bonus.c
+SRCS		= srcs/pipex.c srcs/utils.c srcs/path.c srcs/utils2.c
+BONUS_SRC	= srcs/pipex_bonus.c srcs/path.c srcs/utils.c srcs/utils2.c
 
 OBJS		= $(SRCS:.c=.o)
 BONUS_OBJ	= $(BONUS_SRC:.c=.o)
@@ -47,4 +47,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus

@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:05:13 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/07 09:58:52 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/07 13:39:08 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ void	first(char **argv, char **envp, int *oldfd)
 		infile_fd = open(argv[1], O_RDONLY);
 		if (infile_fd == -1)
 		{
-			perror("Open");
+			perror(argv[1]);
+			close(pipefd[0]);
+			close(pipefd[1]);
 			exit(1);
 		}
 		dup2(infile_fd, STDIN_FILENO);
@@ -77,18 +79,21 @@ void	mid(char **argv, char **envp, int *oldfd, int j)
 void	last(int argc, char **argv, char **envp, int oldfd)
 {
 	int		outfile_fd;
-	int		pipefd[2];
 	pid_t	pid;
 
-	get_pipe(pipefd, &pid);
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		exit(1);
+	}
 	if (pid == 0)
 	{
-		close(pipefd[0]);
 		outfile_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (outfile_fd == -1)
 		{
-			perror("Open");
-			exit (1);
+			perror(argv[argc - 1]);
+			exit(1);
 		}
 		dup2(oldfd, STDIN_FILENO);
 		dup2(outfile_fd, STDOUT_FILENO);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_bonus.c                                      :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 11:53:51 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/03 16:00:18 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/07 13:53:18 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,26 @@ void	here_first(char **argv, int *pipefd, int *oldfd)
 void	here_last(char **argv, char **envp, int oldfd)
 {
 	int		outfile_fd;
-	int		pipefd[2];
 	pid_t	pid;
 
-	get_pipe(pipefd, &pid);
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		exit(1);
+	}
 	if (pid == 0)
 	{
-		close(pipefd[0]);
 		outfile_fd = open(argv[5], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (outfile_fd == -1)
 		{
-			perror("Open");
-			close (pipefd[1]);
+			perror(argv[5]);
 			exit(1);
 		}
 		dup2(oldfd, STDIN_FILENO);
 		dup2(outfile_fd, STDOUT_FILENO);
-		close(pipefd[1]);
 		close(outfile_fd);
+		close(oldfd);
 		doit(argv, envp, 4);
 	}
 	close (oldfd);

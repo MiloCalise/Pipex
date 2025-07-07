@@ -6,72 +6,126 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 13:12:35 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/01 10:55:00 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/07 13:37:55 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-void	child(char **argv, char **envp, int *pipefd)
+void	get_pipe(int *pipefd, pid_t *pid)
 {
-	int		infile_fd;
-
-	infile_fd = open(argv[1], O_RDONLY);
-	if (infile_fd < 0)
+	if (pipe(pipefd) == -1)
 	{
-		perror("Open");
-		close(pipefd[0]);
-		close(pipefd[1]);
-		exit (1);
+		perror("Pipe");
+		exit(1);
 	}
-	dup2(infile_fd, STDIN_FILENO);
-	close(infile_fd);
-	dup2(pipefd[1], STDOUT_FILENO);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	doit(argv, envp, 2);
+	*pid = fork();
+	if (*pid == -1)
+	{
+		perror("Fork");
+		exit(1);
+	}
 }
 
-void	parent(char **argv, char **envp, int *pipefd)
+void	first(char **argv, char **envp, int *oldfd)
+{
+	int		infile_fd;
+	int		pipefd[2];
+	pid_t	pid;
+
+	get_pipe(pipefd, &pid);
+	if (pid == 0)
+	{
+		close(pipefd[0]);
+		infile_fd = open(argv[1], O_RDONLY);
+		if (infile_fd == -1)
+		{
+			perror(argv[1]);
+			close(pipefd[0]);
+			close(pipefd[1]);
+			exit(1);
+		}
+		dup2(infile_fd, STDIN_FILENO);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(infile_fd);
+		doit(argv, envp, 2);
+	}
+	close(pipefd[1]);
+	*oldfd = pipefd[0];
+}
+
+void	mid(char **argv, char **envp, int *oldfd, int j)
+{
+	int		prevfd;
+	int		pipefd[2];
+	pid_t	pid;
+
+	prevfd = *oldfd;
+	get_pipe(pipefd, &pid);
+	if (pid == 0)
+	{
+		close(pipefd[0]);
+		dup2(prevfd, STDIN_FILENO);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(prevfd);
+		close(pipefd[1]);
+		doit(argv, envp, j);
+	}
+	close(prevfd);
+	close(pipefd[1]);
+	*oldfd = pipefd[0];
+}
+
+void	last(int argc, char **argv, char **envp, int oldfd)
 {
 	int		outfile_fd;
+	pid_t	pid;
 
-	outfile_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (outfile_fd < 0)
+	pid = fork();
+	if (pid < 0)
 	{
-		perror("Open");
-		close(pipefd[0]);
-		close(pipefd[1]);
-		wait(NULL);
-		exit (1);
+		perror("fork");
+		exit(1);
 	}
-	dup2(pipefd[0], STDIN_FILENO);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	dup2(outfile_fd, STDOUT_FILENO);
-	close(outfile_fd);
-	wait(NULL);
-	doit(argv, envp, 3);
+	if (pid == 0)
+	{
+		outfile_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (outfile_fd == -1)
+		{
+			perror(argv[argc - 1]);
+			exit(1);
+		}
+		dup2(oldfd, STDIN_FILENO);
+		dup2(outfile_fd, STDOUT_FILENO);
+		close(oldfd);
+		close(outfile_fd);
+		doit(argv, envp, argc - 2);
+	}
+	close(oldfd);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	int		pipefd[2];
-	int		status;
-	int		exit_code;
-	pid_t	pid;
+	int	i;
+	int	oldfd;
+	int	status;
+	int	exit_code;
 
-	if (argc != 5)
+	if (argc < 5)
 		return (1);
-	if (pipe(pipefd) == -1)
-		return (perror("Pipe"), 1);
-	pid = fork();
-	if (pid == -1)
-		return (perror("Fork"), 1);
-	if (pid == 0)
-		child(argv, envp, pipefd);
+	if (ft_strncmp(argv[1], "here_doc", 8) != 0)
+	{
+		first(argv, envp, &oldfd);
+		i = 3;
+		while (i < argc - 2)
+			mid(argv, envp, &oldfd, i++);
+		last(argc, argv, envp, oldfd);
+	}
 	else
-		parent(argv, envp, pipefd);
+	{
+		doc(argc, argv, envp, &oldfd);
+		here_last(argv, envp, oldfd);
+	}
 	exit_code = 0;
 	while (wait(&status) > 0)
 		exit_code = (status >> 8) & 0xFF;

@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 10:02:11 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/01 12:43:29 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/07 12:57:28 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*final_path(char **argv, char **envp, int j)
 			return (NULL);
 		if (access(temp[0], X_OK) != 0)
 		{
-			perror("Access");
+			perror(temp[0]);
 			return (free_split(temp), NULL);
 		}
 		correct = ft_strdup(temp[0]);
@@ -77,7 +77,7 @@ void	doit(char **argv, char **envp, int j)
 	}
 	if (execve(path, cmd, envp) == -1)
 	{
-		perror("Execve");
+		perror(cmd[0]);
 		free(path);
 		free_split(cmd);
 		exit (1);
