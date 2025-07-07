@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:05:13 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/03 15:57:19 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/07 09:58:52 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ void	first(char **argv, char **envp, int *oldfd)
 		if (infile_fd == -1)
 		{
 			perror("Open");
-			if (*oldfd != -1)
-				close(*oldfd);
 			exit(1);
 		}
 		dup2(infile_fd, STDIN_FILENO);
@@ -90,8 +88,6 @@ void	last(int argc, char **argv, char **envp, int oldfd)
 		if (outfile_fd == -1)
 		{
 			perror("Open");
-			if (oldfd != -1)
-				close(oldfd);
 			exit (1);
 		}
 		dup2(oldfd, STDIN_FILENO);
