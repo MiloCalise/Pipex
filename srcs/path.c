@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:07:31 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/01 10:58:54 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/01 12:09:53 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,13 @@ char	*correct_path(char **argv, char **envp, int j)
 	if (!paths)
 		return (NULL);
 	cmd = ft_split(argv[j], ' ');
-	if (!cmd)
+	if (!cmd || !cmd[0])
+	{
+		if (cmd)
+			free_split(cmd);
+		ft_putstr_fd("Invalid command", 2);
 		return (free_split(paths), NULL);
+	}
 	temp = cmd[0];
 	cmd[0] = ft_strjoin("/", cmd[0]);
 	free(temp);

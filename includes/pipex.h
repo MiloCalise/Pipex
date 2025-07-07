@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 13:16:22 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/01 09:50:31 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/03 15:15:29 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,14 @@
 # include <sys/wait.h>
 
 void	free_split(char **strs);
-void	f(char *p1, char *p2, char **a1, char **a2);
 void	child(char **argv, char **envp, int *pipefd);
 void	parent(char **argv, char **envp, int *pipefd);
 void	doit(char **argv, char **envp, int j);
+void	get_pipe(int *pipefd, pid_t *pid);
+void	doc(int argc, char **argv, char **envp, int *oldfd);
+void	mid(char **argv, char **envp, int *oldfd, int j);
+void	here_last(char **argv, char **envp, int oldfd);
+void	here_first(char **argv, int *pipefd, int *oldfd);
 
 int		ft_strrchrr(const char *s, int c);
 

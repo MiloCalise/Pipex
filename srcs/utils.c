@@ -6,23 +6,11 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 10:02:11 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/01 10:59:41 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/01 12:43:29 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-
-void	f(char *p1, char *p2, char **a1, char **a2)
-{
-	if (p1)
-		free(p1);
-	if (p2)
-		free(p2);
-	if (a1)
-		free_split(a1);
-	if (a2)
-		free_split(a2);
-}
 
 int	ft_strrchrr(const char *s, int c)
 {
@@ -84,7 +72,7 @@ void	doit(char **argv, char **envp, int j)
 		if (cmd)
 			free_split(cmd);
 		free(path);
-		ft_putstr_fd("Invlaid command", 2);
+		ft_putstr_fd("Invalid command", 2);
 		exit(127);
 	}
 	if (execve(path, cmd, envp) == -1)
