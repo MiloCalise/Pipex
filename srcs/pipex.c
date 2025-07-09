@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 13:12:35 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/07 13:37:55 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/09 09:53:32 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	first(char **argv, char **envp, int *oldfd)
 		dup2(infile_fd, STDIN_FILENO);
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(infile_fd);
+		close(pipefd[1]);
 		doit(argv, envp, 2);
 	}
 	close(pipefd[1]);

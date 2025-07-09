@@ -6,13 +6,13 @@
 #    By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/12 13:17:19 by miltavar          #+#    #+#              #
-#    Updated: 2025/07/07 12:53:59 by miltavar         ###   ########.fr        #
+#    Updated: 2025/07/09 09:56:42 by miltavar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= pipex
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -g -Ilibft/includes -Iincludes
+CFLAGS		= -Wall -Wextra -Werror -Ilibft/includes -Iincludes
 
 SRCS		= srcs/pipex.c srcs/utils.c srcs/path.c srcs/utils2.c
 BONUS_SRC	= srcs/pipex_bonus.c srcs/path.c srcs/utils.c srcs/utils2.c
