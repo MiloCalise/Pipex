@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 11:53:51 by miltavar          #+#    #+#             */
-/*   Updated: 2025/07/07 13:53:18 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/07/14 10:58:32 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	here_last(char **argv, char **envp, int oldfd)
 		if (outfile_fd == -1)
 		{
 			perror(argv[5]);
+			close(oldfd);
 			exit(1);
 		}
 		dup2(oldfd, STDIN_FILENO);
